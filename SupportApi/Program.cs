@@ -21,15 +21,12 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // 4. Middleware de Swagger
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support API V1");
-        c.RoutePrefix = string.Empty;  // Swagger UI en la ra�z '/'
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support API V1");
+    c.RoutePrefix = string.Empty;  // Swagger UI en la raíz '/'
+});
 
 // 5. Middlewares base
 app.UseHttpsRedirection();

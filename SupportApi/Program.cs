@@ -1,3 +1,4 @@
+using SupportApi.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,6 +10,8 @@ using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<FluentValidation.IValidator<SupportApi.DTOs.ReclamoDto>, SupportApi.Validators.ReclamoDtoValidator>();
 
 // 1. Configuración del DbContext
 builder.Services.AddDbContext<SupportDbContext>(options =>
@@ -97,6 +100,8 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
+// Mover la línea de AddAutoMapper justo después de la configuración de servicios
+builder.Services.AddAutoMapper(typeof(ReclamoProfile), typeof(UsuarioProfile), typeof(RespuestaProfile));
 var app = builder.Build();
 
 // Swagger solo en desarrollo
@@ -106,7 +111,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Support API V1");
-        c.RoutePrefix = "";
+        // Por defecto, Swagger UI estará disponible en /swagger
+        // Si quieres cambiar la ruta, usa: c.RoutePrefix = "swagger";
     });
 }
 
@@ -117,3 +123,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

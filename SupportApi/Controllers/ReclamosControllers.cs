@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using SupportApi.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using SupportApi.Models;
 using SupportApi.Data;
 using Microsoft.EntityFrameworkCore;
 
+using FluentValidation;
+using SupportApi.Validators;
 namespace SupportApi.Controllers
 {
     [ApiController]
@@ -10,10 +13,11 @@ namespace SupportApi.Controllers
     public class ReclamosController : ControllerBase
     {
         private readonly SupportDbContext _context;
-
-        public ReclamosController(SupportDbContext context)
+        private readonly IValidator<ReclamoDto> _validator;
+        public ReclamosController(SupportDbContext context, IValidator<ReclamoDto> validator)
         {
             _context = context;
+            _validator = validator;
         }
 
         // GET: api/reclamos
@@ -33,10 +37,8 @@ namespace SupportApi.Controllers
 
             if (reclamo == null)
                 return NotFound();
-
             return Ok(reclamo);
         }
-
         // POST: api/reclamos
         [HttpPost]
         public async Task<ActionResult<Reclamo>> Crear(Reclamo reclamo)
@@ -87,4 +89,3 @@ namespace SupportApi.Controllers
         }
     }
 }
-    

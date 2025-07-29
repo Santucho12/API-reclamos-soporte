@@ -8,6 +8,8 @@ namespace SupportApi.Tests.Controllers
         public void Test1()
         {
             Assert.True(true);
+
+            
         }
     }
 }
